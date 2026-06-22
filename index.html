@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mockup Bank - Member Dashboard</title>
+<style>
+  /* --- Global & Typography --- */
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f5f7;
+    color: #333;
+  }
+  
+  /* --- Navigation --- */
+  header {
+    background-color: #003058;
+    color: white;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  .logo {
+    font-size: 1.5rem;
+    letter-spacing: 2px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  nav a {
+    color: white;
+    text-decoration: none;
+    margin-left: 1.5rem;
+    font-size: 0.95rem;
+    transition: color 0.2s;
+  }
+  nav a:hover {
+    color: #a3c2e0;
+  }
+
+  /* --- Layout & Utility --- */
+  .hero {
+    background-color: #004b87;
+    color: white;
+    padding: 2.5rem 2rem;
+    text-align: center;
+  }
+  .hero h1 { margin: 0 0 0.5rem 0; font-size: 2rem; }
+  .container {
+    max-width: 1000px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+  }
+  .hidden {
+    display: none !important;
+  }
+
+  /* --- Buttons (Fully Responsive) --- */
+  .action-btn {
+    display: inline-block;
+    margin-top: 1rem;
+    padding: 0.6rem 1.2rem;
+    background-color: #003058;
+    color: white;
+    border: none;
+    text-decoration: none;
+    border-radius: 4px;
+    text-align: center;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: all 0.2s ease-in-out;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  .action-btn:hover {
+    background-color: #005b9f;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    transform: translateY(-1px);
+  }
+  .action-btn:active {
+    background-color: #001f3a;
+    transform: translateY(1px);
+    box-shadow: none;
+  }
+  .back-btn {
+    background-color: #e0e0e0;
+    color: #333;
+    margin-bottom: 1.5rem;
+    width: auto;
+  }
+  .back-btn:hover { background-color: #ccc; }
+
+  /* --- Grid Dashboard --- */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+  }
+  .card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+  }
+  .card h3 {
+    margin-top: 0;
+    color: #003058;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 0.5rem;
+  }
+  .balance {
+    font-size: 1.8rem;
+    color: #2e7d32;
+    margin: 0.5rem 0;
+    font-weight: bold;
+  }
+  .card-content { flex-grow: 1; }
+
+  /* --- Table Styles (Transactions & Savings) --- */
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .data-table th, .data-table td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+  }
+  .data-table th {
+    background-color: #003058;
+    color: white;
+  }
+  .negative { color: #d32f2f; }
+  .positive { color: #2e7d32; }
+
+  /* --- Filters --- */
+  .filter-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    background: white;
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  }
+  select {
+    padding: 0.5rem;
+    font-size: 1rem;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+  }
+
+  /* --- ID Card Style --- */
+  .id-card-wrapper {
+    display: flex;
+    justify-content: center;
+  }
+  .id-card {
+    background: linear-gradient(135deg, #003058 0%, #004b87 100%);
+    color: white;
+    width: 100%;
+    max-width: 400px;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    position: relative;
+    overflow: hidden;
+  }
+  .id-card::before {
+    content: '';
+    position: absolute;
+    top: -50%; left: -50%; width: 200%; height: 200%;
+    background: rgba(255,255,255,0.05);
+    transform: rotate(30deg);
+    pointer-events: none;
+  }
+  .id-card h3 { margin-top: 0; border-bottom: 1px solid rgba(255,255,255,0.3); padding-bottom: 0.5rem; }
+  .id-field { margin-bottom: 1rem; }
+  .id-label { font-size: 0.8rem; color: #a3c2e0; text-transform: uppercase; }
+  .id-value { font-size: 1.1rem; font-weight: bold; }
+
+  /* --- Mobile Adjustments --- */
+  @media (max-width: 600px) {
+    header { flex-direction: column; padding: 1rem; }
+    nav { margin-top: 1rem; }
+    nav a { margin: 0 0.75rem; }
+    .filter-bar { flex-direction: column; align-items: flex-start; gap: 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo" onclick="showSection('dashboard-view')">SECURE BANK</div>
+  <nav>
+    <a href="#" onclick="showSection('dashboard-view')">Accounts</a>
+    <a href="#" onclick="showSection('transactions-view')">History</a>
+    <a href="#" onclick="showSection('login-view')">Log Out</a>
+  </nav>
+</header>
+
+<div class="hero" id="hero-section">
+  <h1>Welcome, Member</h1>
+  <p>Your financial readiness starts here.</p>
+</div>
+
+<div class="container">
+  
+  <div id="dashboard-view" class="view-section">
+    <div class="grid">
+      <div class="card">
+        <div class="card-content">
+          <h3>Everyday Checking</h3>
+          <p>Available Balance</p>
+          <div class="balance">$2,450.00</div>
+        </div>
+        <button class="action-btn" onclick="showSection('transactions-view')">View Transactions</button>
+      </div>
+
+      <div class="card">
+        <div class="card-content">
+          <h3>Performance Savings</h3>
+          <p>Available Balance</p>
+          <div class="balance">$15,200.50</div>
+          <p style="font-size: 0.9rem; color: #666;">Interest Rate: 4.25% APY</p>
+        </div>
+        <button class="action-btn" onclick="showSection('savings-view')">Manage Savings</button>
+      </div>
+
+      <div class="card">
+        <div class="card-content">
+          <h3>Auto Insurance</h3>
+          <p>Policy: Active</p>
+          <p>Next Payment: $125.00 on July 1</p>
+        </div>
+        <button class="action-btn" onclick="showSection('id-card-view')">View ID Cards</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="transactions-view" class="view-section hidden">
+    <button class="action-btn back-btn" onclick="showSection('dashboard-view')">← Back to Dashboard</button>
+    <h2>Checking History</h2>
+    
+    <div class="filter-bar">
+      <div>
+        <strong>Filter by Year: </strong>
+        <select id="year-filter">
+          <option value="2026">2026</option>
+          <option value="2025">2025</option>
+          <option value="2024">2024</option>
+          <option disabled>──────</option>
+          <option value="2002">2002 (Archive)</option>
+        </select>
+      </div>
+      <button class="action-btn" style="width: auto; margin-top: 0;">Download Statement</button>
+    </div>
+
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Description</th>
+          <th>Type</th>
+          <th>Amount</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Jun 20, 2026</td>
+          <td>H-E-B Grocery Store</td>
+          <td>Debit</td>
+          <td class="negative">-$142.50</td>
+        </tr>
+        <tr>
+          <td>Jun 18, 2026</td>
+          <td>DFAS MILITARY PAY</td>
+          <td>Direct Deposit</td>
+          <td class="positive">+$3,125.00</td>
+        </tr>
+        <tr>
+          <td>Jun 15, 2026</td>
+          <td>Shell Station #492</td>
+          <td>Debit</td>
+          <td class="negative">-$45.00</td>
+        </tr>
+        <tr style="background-color: #fafafa;">
+          <td colspan="4" style="text-align: center; color: #666;">... Historical Records ...</td>
+        </tr>
+        <tr>
+          <td>Oct 12, 2002</td>
+          <td>BLOCKBUSTER VIDEO</td>
+          <td>Debit</td>
+          <td class="negative">-$4.99</td>
+        </tr>
+        <tr>
+          <td>Sep 01, 2002</td>
+          <td>INITIAL DEPOSIT</td>
+          <td>Deposit</td>
+          <td class="positive">+$500.00</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div id="savings-view" class="view-section hidden">
+    <button class="action-btn back-btn" onclick="showSection('dashboard-view')">← Back to Dashboard</button>
+    <h2>Performance Savings</h2>
+    
+    <div class="card" style="margin-bottom: 2rem;">
+      <h3 style="border: none;">Current Balance</h3>
+      <div class="balance">$15,200.50</div>
+      <p>YTD Interest Earned: <strong>$320.15</strong></p>
+      <div style="display: flex; gap: 1rem;">
+        <button class="action-btn">Transfer In</button>
+        <button class="action-btn" style="background-color: white; color: #003058; border: 1px solid #003058;">Withdraw</button>
+      </div>
+    </div>
+
+    <h3>Recent Savings Activity</h3>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Description</th>
+          <th>Amount</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>May 31, 2026</td>
+          <td>Interest Paid</td>
+          <td class="positive">+$52.30</td>
+        </tr>
+        <tr>
+          <td>May 15, 2026</td>
+          <td>Auto-Transfer from Checking</td>
+          <td class="positive">+$250.00</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div id="id-card-view" class="view-section hidden">
+    <button class="action-btn back-btn" onclick="showSection('dashboard-view')">← Back to Dashboard</button>
+    <h2>Digital Auto ID Card</h2>
+    <p>Present this digital card as proof of insurance.</p>
+
+    <div class="id-card-wrapper">
+      <div class="id-card">
+        <h3>SECURE INSURANCE</h3>
+        
+        <div class="id-field">
+          <div class="id-label">Named Insured</div>
+          <div class="id-value">MEMBER NAME</div>
+        </div>
+        
+        <div style="display: flex; justify-content: space-between;">
+          <div class="id-field">
+            <div class="id-label">Policy Number</div>
+            <div class="id-value">AU-992-4811</div>
+          </div>
+          <div class="id-field">
+            <div class="id-label">Effective Dates</div>
+            <div class="id-value">01/01/26 - 07/01/26</div>
+          </div>
+        </div>
+
+        <div class="id-field">
+          <div class="id-label">Vehicle</div>
+          <div class="id-value">2022 TOYOTA TACOMA</div>
+        </div>
+        
+        <div class="id-field" style="margin-bottom: 0;">
+          <div class="id-label">VIN</div>
+          <div class="id-value" style="font-family: monospace;">1NXBR32E8MZ10944</div>
+        </div>
+      </div>
+    </div>
+    
+    <div style="text-align: center; margin-top: 2rem;">
+      <button class="action-btn" style="max-width: 300px;">Save to Apple Wallet</button>
+      <button class="action-btn" style="max-width: 300px;">Download PDF</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // JavaScript to handle the Single Page Application navigation
+  function showSection(sectionId) {
+    // 1. Hide all sections
+    const views = document.querySelectorAll('.view-section');
+    views.forEach(view => {
+      view.classList.add('hidden');
+    });
+
+    // 2. Hide hero banner if not on dashboard
+    const hero = document.getElementById('hero-section');
+    if (sectionId === 'dashboard-view') {
+      hero.classList.remove('hidden');
+    } else {
+      hero.classList.add('hidden');
+    }
+
+    // 3. Show the requested section
+    // If the user clicks logout, we can just alert or reset the app
+    if(sectionId === 'login-view') {
+        alert("Simulating Log Out. Returning to Dashboard.");
+        document.getElementById('dashboard-view').classList.remove('hidden');
+        hero.classList.remove('hidden');
+    } else {
+        document.getElementById(sectionId).classList.remove('hidden');
+    }
+    
+    // Scroll to top
+    window.scrollTo(0, 0);
+  }
+</script>
+
+</body>
+</html>
